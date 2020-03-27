@@ -11,16 +11,13 @@ protected:
 public:
 	shape(double shape_dimensions) { dimensions = shape_dimensions;}
 	virtual ~shape() { std::cout << "destroying shape" << std::endl; }
-	virtual void info() 
-	{ 
+	virtual void info() { 
 		std::cout << "shape, with dimensions: " << dimensions << std::endl; 
 	}
-	//area function
 	virtual double area() {
 		double shape_area{};
 		return shape_area;
 	}
-	//volume function
 	virtual double volume() {
 		double shape_volume{};
 		return shape_volume;
@@ -35,8 +32,11 @@ protected:
 public:
 	two_D_shape(double corners) : shape{ 2 } { vertices = corners; }
 	virtual ~two_D_shape() {std::cout << "destroying 2D shape" << std::endl;}
-	virtual void info() { std::cout << "2D shape" << std::endl; }
 	virtual two_D_shape* duplicate() { return 0; };
+	virtual double perimeter() { return 0; }
+	virtual void info() { 
+		std::cout << "2D shape with " << vertices << " corners." << std::endl; 
+	}
 };
 //3D
 class three_D_shape : public shape
@@ -44,10 +44,12 @@ class three_D_shape : public shape
 protected:
 	double vertices{};
 public:
-	three_D_shape(double corners) :shape{ 3 } {
-		vertices = corners;
-	}
+	three_D_shape(double corners) :shape{ 3 } {vertices = corners;}
 	virtual ~three_D_shape() { std::cout << "destroying 3D shape" << std::endl; }
+	virtual double suface_area() { return 0; };
+	virtual void info() {
+		std::cout << "3D shape with " << vertices << " corners." << std::endl;
+	}
 };
 //derived 2D shape classes
 class rectangle : public two_D_shape
@@ -56,8 +58,7 @@ private:
 	double length{};
 	double width{};
 public:
-	rectangle(double width_input, double length_input): two_D_shape{4}
-	{
+	rectangle(double width_input, double length_input): two_D_shape{4}{
 		width = width_input;
 		length = length_input;
 	};
@@ -66,11 +67,14 @@ public:
 		double rec_area = width * length;
 		return rec_area;
 	}
+	double perimeter() {
+		double rec_perimeter = 2 * (length + width);
+		return rec_perimeter;
+	}
 	two_D_shape* duplicate() {
 		return new rectangle(width, length);
 	}
-	void info()
-	{
+	void info(){
 		std::cout << "rectangle, area: " << area() << std::endl;
 	}
 };
@@ -79,13 +83,11 @@ class square : public rectangle
 private:
 	double square_length{};
 public:
-	square(double length) : rectangle{ length, length } 
-	{
+	square(double length) : rectangle{ length, length } {
 		square_length = length;
 	}
 	~square() { std::cout << "destroying square" << std::endl; }
-	void info()
-	{
+	void info(){
 		std::cout << "square, area: " << area() << std::endl;
 	}
 };
@@ -105,11 +107,16 @@ public:
 		double ellipse_area = pi * major_radius * minor_radius;
 		return ellipse_area;
 	}
+	double perimeter() {
+		//Ramanujan's approximation
+		double h = pow(major_radius - minor_radius, 2) / pow(major_radius + minor_radius, 2);
+		double ellipse_perimeter = pi * (major_radius + minor_radius) * (1 + (3 * h) / (10 + sqrt(4 - 3 * h)));
+		return ellipse_perimeter;
+	}
 	two_D_shape* duplicate() {
 		return new ellipse(major_radius, minor_radius);
 	}
-	void info()
-	{
+	void info(){
 		std::cout << "ellipse, area: " << area() << std::endl;
 	}
 };
@@ -118,13 +125,15 @@ class circle : public ellipse
 private:
 	double circle_radius{};
 public:
-	circle(double radius) :ellipse{ radius,radius } 
-	{ 
+	circle(double radius) :ellipse{ radius,radius } { 
 		circle_radius = radius; 
 	}
+	double perimeter() {
+		double circle_perimeter = 2 * pi * (circle_radius);
+		return circle_perimeter;
+	}
 	~circle() { std::cout << "destroying circle" << std::endl; }
-	void info()
-	{
+	void info(){
 		std::cout << "circle, area: " << area() << std::endl;
 	}
 };
@@ -146,8 +155,13 @@ public:
 		double cuboid_volume = length * width * height;
 		return cuboid_volume;
 	}
+	double surface_area() {
+		double cuboid_SA = 2*(length * width + length * height + height * width);
+		return cuboid_SA;
+	}
 	void info() {
 		std::cout << "cuboid, volume: " << volume() << std::endl;
+		std::cout << "cuboid, surface area: " << surface_area() << std::endl;
 	}
 };
 class cube : public cuboid
@@ -161,6 +175,7 @@ public:
 	~cube() { std::cout << "destroying cube" << std::endl; }
 	void info() {
 		std::cout << "cube, volume: " << volume() << std::endl;
+		std::cout << "cube, surface area: " << surface_area() << std::endl;
 	}
 };
 class ellipsoid : public three_D_shape
@@ -169,6 +184,7 @@ protected:
 	double radius_1{};
 	double radius_2{};
 	double radius_3{};
+	double p{ 1.6075 };
 public:
 	ellipsoid(double r1, double r2, double r3) : three_D_shape{0} {
 		radius_1 = r1;
@@ -181,8 +197,14 @@ public:
 		double ellipsoid_volume = (4 / 3) * pi * radius_1 * radius_2 * radius_3;
 		return ellipsoid_volume;
 	}
+	double surface_area() {
+		//Knud Thomsen's formula
+		double knud_ellipsoid_sa = 4 * pi * pow((pow(radius_1,p) * pow(radius_2, p) + pow(radius_1, p)* pow(radius_3, p) + pow(radius_2, p)* pow(radius_3, p)) / 3, -p);
+		return knud_ellipsoid_sa;
+	}
 	void info() {
 		std::cout << "ellipsoid, volume: " << volume() << std::endl;
+		std::cout << "ellipsoid, surface area: " << surface_area() << std::endl;
 	}
 };
 class sphere: public ellipsoid
@@ -194,8 +216,13 @@ public:
 		radius = r;
 	}
 	~sphere() { std::cout << "destroying sphere" << std::endl; }
+	double surface_area() {
+		double sphere_sa = (4 / 3) * pi * pow(radius, 3);
+		return sphere_sa;
+	}
 	void info() {
 		std::cout << "sphere, volume: " << volume() << std::endl;
+		std::cout << "sphere, surface area: " << surface_area() << std::endl;
 	}
 };
 class prism : public three_D_shape
@@ -210,19 +237,23 @@ public:
 		prism_depth = depth;
 	}
 	~prism() { std::cout << "destroying prism" << std::endl; }
-
 	double volume() {
 		double prism_volume = prism_base->area() * prism_depth;
 		return prism_volume;
 	}
+	double surface_area() {
+		double prism_sa = 2 * (prism_base->area()) + prism_depth * (prism_base->perimeter());
+		return prism_sa;
+	}
 	void info() {
-		std::cout << "prism, base area: "<< prism_base->area() << "\nprism volume: " << volume() << std::endl;
+		std::cout << "prism, base area: "<< prism_base->area() << "\nprism, volume: " << volume() << std::endl;
+		std::cout << "prism, surface area: " << surface_area() << std::endl;
 	}
 };
 
 int main()
 {
-	shape **shape_array = new shape*[10];
+	shape **shape_array = new shape*[11];
 	shape_array[0] = new rectangle{ 2,3 };
 	shape_array[1] = new square{3};
 	shape_array[2] = new ellipse{ 4,5 };
@@ -235,6 +266,8 @@ int main()
 	shape_array[8] = new prism{ prism_base1,2 };
 	circle prism_base2(2);
 	shape_array[9] = new prism{ prism_base2,4 };
+	ellipse prism_base3(1, 2);
+	shape_array[10] = new prism{ prism_base3,3 };
 	shape_array[0]->info();
 	shape_array[1]->info();
 	shape_array[2]->info();
@@ -245,6 +278,7 @@ int main()
 	shape_array[7]->info();
 	shape_array[8]->info();
 	shape_array[9]->info();
+	shape_array[10]->info();
 	delete shape_array[0]; shape_array[0] = 0;
 	delete shape_array[1]; shape_array[1] = 0;
 	delete shape_array[2]; shape_array[2] = 0;
@@ -254,6 +288,7 @@ int main()
 	delete shape_array[6]; shape_array[6] = 0;
 	delete shape_array[7]; shape_array[7] = 0;
 	delete shape_array[8]; shape_array[8] = 0;
+	delete shape_array[9]; shape_array[9] = 0;
 	delete shape_array[9]; shape_array[9] = 0;
 	return 0;
 }
