@@ -241,7 +241,7 @@ public:
 	~sphere() { std::cout << "destroying sphere" << std::endl; }
 	double surface_area() 
 	{
-		double sphere_sa = (4 / 3) * pi * pow(radius, 3);
+		double sphere_sa = 4 * pi * pow(radius, 2);
 		return sphere_sa;
 	}
 	void info() 
