@@ -11,16 +11,19 @@ protected:
 public:
 	shape(double shape_dimensions) { dimensions = shape_dimensions;}
 	virtual ~shape() { std::cout << "destroying shape" << std::endl; }
-	virtual void info() { 
-		std::cout << "shape, with dimensions: " << dimensions << std::endl; 
-	}
-	virtual double area() {
+	virtual double area() 
+	{
 		double shape_area{};
 		return shape_area;
 	}
-	virtual double volume() {
+	virtual double volume() 
+	{
 		double shape_volume{};
 		return shape_volume;
+	}
+	virtual void info()
+	{
+		std::cout << "shape, with dimensions: " << dimensions << std::endl;
 	}
 };
 //abstract derived classes
@@ -34,7 +37,8 @@ public:
 	virtual ~two_D_shape() {std::cout << "destroying 2D shape" << std::endl;}
 	virtual two_D_shape* duplicate() { return 0; };
 	virtual double perimeter() { return 0; }
-	virtual void info() { 
+	virtual void info() 
+	{ 
 		std::cout << "2D shape with " << vertices << " corners." << std::endl; 
 	}
 };
@@ -47,7 +51,8 @@ public:
 	three_D_shape(double corners) :shape{ 3 } {vertices = corners;}
 	virtual ~three_D_shape() { std::cout << "destroying 3D shape" << std::endl; }
 	virtual double suface_area() { return 0; };
-	virtual void info() {
+	virtual void info() 
+	{
 		std::cout << "3D shape with " << vertices << " corners." << std::endl;
 	}
 };
@@ -58,23 +63,28 @@ private:
 	double length{};
 	double width{};
 public:
-	rectangle(double width_input, double length_input): two_D_shape{4}{
+	rectangle(double width_input, double length_input): two_D_shape{4}
+	{
 		width = width_input;
 		length = length_input;
 	};
 	~rectangle() { std::cout << "destroying rectangle" << std::endl; }
-	double area() {
+	double area() 
+	{
 		double rec_area = width * length;
 		return rec_area;
 	}
-	double perimeter() {
+	double perimeter() 
+	{
 		double rec_perimeter = 2 * (length + width);
 		return rec_perimeter;
 	}
-	two_D_shape* duplicate() {
+	two_D_shape* duplicate() 
+	{
 		return new rectangle(width, length);
 	}
-	void info(){
+	void info()
+	{
 		std::cout << "rectangle, area: " << area() << std::endl;
 	}
 };
@@ -83,11 +93,13 @@ class square : public rectangle
 private:
 	double square_length{};
 public:
-	square(double length) : rectangle{ length, length } {
+	square(double length) : rectangle{ length, length } 
+	{
 		square_length = length;
 	}
 	~square() { std::cout << "destroying square" << std::endl; }
-	void info(){
+	void info()
+	{
 		std::cout << "square, area: " << area() << std::endl;
 	}
 };
@@ -97,26 +109,31 @@ private:
 	double major_radius{};
 	double minor_radius{};
 public:
-	ellipse(double long_radius, double short_radius) :two_D_shape{0} {
+	ellipse(double long_radius, double short_radius) :two_D_shape{0} 
+	{
 		major_radius = long_radius;
 		minor_radius = short_radius;
 	}
 	~ellipse() { std::cout << "destroying ellipse" << std::endl; }
-	double area() {
+	double area() 
+	{
 		double pi = 3.14159;
 		double ellipse_area = pi * major_radius * minor_radius;
 		return ellipse_area;
 	}
-	double perimeter() {
+	double perimeter() 
+	{
 		//Ramanujan's approximation
 		double h = pow(major_radius - minor_radius, 2) / pow(major_radius + minor_radius, 2);
 		double ellipse_perimeter = pi * (major_radius + minor_radius) * (1 + (3 * h) / (10 + sqrt(4 - 3 * h)));
 		return ellipse_perimeter;
 	}
-	two_D_shape* duplicate() {
+	two_D_shape* duplicate() 
+	{
 		return new ellipse(major_radius, minor_radius);
 	}
-	void info(){
+	void info()
+	{
 		std::cout << "ellipse, area: " << area() << std::endl;
 	}
 };
@@ -125,15 +142,18 @@ class circle : public ellipse
 private:
 	double circle_radius{};
 public:
-	circle(double radius) :ellipse{ radius,radius } { 
+	circle(double radius) :ellipse{ radius,radius } 
+	{ 
 		circle_radius = radius; 
 	}
-	double perimeter() {
+	double perimeter() 
+	{
 		double circle_perimeter = 2 * pi * (circle_radius);
 		return circle_perimeter;
 	}
 	~circle() { std::cout << "destroying circle" << std::endl; }
-	void info(){
+	void info()
+	{
 		std::cout << "circle, area: " << area() << std::endl;
 	}
 };
@@ -145,21 +165,25 @@ protected:
 	double width{};
 	double height{};
 public:
-	cuboid(double cuboid_length, double cuboid_width, double cuboid_height) :three_D_shape(8) {
+	cuboid(double cuboid_length, double cuboid_width, double cuboid_height) :three_D_shape(8) 
+	{
 		length = cuboid_length;
 		width = cuboid_width;
 		height = cuboid_height;
 	}
 	~cuboid(){ std::cout << "destroying cuboid" << std::endl; }
-	double volume() {
+	double volume() 
+	{
 		double cuboid_volume = length * width * height;
 		return cuboid_volume;
 	}
-	double surface_area() {
+	double surface_area() 
+	{
 		double cuboid_SA = 2*(length * width + length * height + height * width);
 		return cuboid_SA;
 	}
-	void info() {
+	void info() 
+	{
 		std::cout << "cuboid, volume: " << volume() << std::endl;
 		std::cout << "cuboid, surface area: " << surface_area() << std::endl;
 	}
@@ -169,11 +193,13 @@ class cube : public cuboid
 protected:
 	double cube_length{};
 public:
-	cube(double length) : cuboid(length, length, length) {
+	cube(double length) : cuboid(length, length, length) 
+	{
 		cube_length = length;
 	}
 	~cube() { std::cout << "destroying cube" << std::endl; }
-	void info() {
+	void info() 
+	{
 		std::cout << "cube, volume: " << volume() << std::endl;
 		std::cout << "cube, surface area: " << surface_area() << std::endl;
 	}
@@ -186,23 +212,27 @@ protected:
 	double radius_3{};
 	double p{ 1.6075 };
 public:
-	ellipsoid(double r1, double r2, double r3) : three_D_shape{0} {
+	ellipsoid(double r1, double r2, double r3) : three_D_shape{0} 
+	{
 		radius_1 = r1;
 		radius_2 = r2;
 		radius_3 = r3;
 	}
 	~ellipsoid(){ std::cout << "destroying ellipsoid" << std::endl; }
-	double volume() {
+	double volume() 
+	{
 		double pi = 3.14159;
 		double ellipsoid_volume = (4 / 3) * pi * radius_1 * radius_2 * radius_3;
 		return ellipsoid_volume;
 	}
-	double surface_area() {
+	double surface_area() 
+	{
 		//Knud Thomsen's formula
 		double knud_ellipsoid_sa = 4 * pi * pow((pow(radius_1,p) * pow(radius_2, p) + pow(radius_1, p)* pow(radius_3, p) + pow(radius_2, p)* pow(radius_3, p)) / 3, -p);
 		return knud_ellipsoid_sa;
 	}
-	void info() {
+	void info() 
+	{
 		std::cout << "ellipsoid, volume: " << volume() << std::endl;
 		std::cout << "ellipsoid, surface area: " << surface_area() << std::endl;
 	}
@@ -212,15 +242,18 @@ class sphere: public ellipsoid
 protected:
 	double radius{};
 public:
-	sphere(double r) : ellipsoid(r,r,r) {
+	sphere(double r) : ellipsoid(r,r,r) 
+	{
 		radius = r;
 	}
 	~sphere() { std::cout << "destroying sphere" << std::endl; }
-	double surface_area() {
+	double surface_area() 
+	{
 		double sphere_sa = (4 / 3) * pi * pow(radius, 3);
 		return sphere_sa;
 	}
-	void info() {
+	void info() 
+	{
 		std::cout << "sphere, volume: " << volume() << std::endl;
 		std::cout << "sphere, surface area: " << surface_area() << std::endl;
 	}
@@ -232,20 +265,24 @@ protected:
 	double prism_depth{};
 	double corners{};
 public:
-	prism(two_D_shape& base, double depth) : three_D_shape(corners){
+	prism(two_D_shape& base, double depth) : three_D_shape(corners)
+	{
 		prism_base = base.duplicate();
 		prism_depth = depth;
 	}
 	~prism() { std::cout << "destroying prism" << std::endl; }
-	double volume() {
+	double volume() 
+	{
 		double prism_volume = prism_base->area() * prism_depth;
 		return prism_volume;
 	}
-	double surface_area() {
+	double surface_area() 
+	{
 		double prism_sa = 2 * (prism_base->area()) + prism_depth * (prism_base->perimeter());
 		return prism_sa;
 	}
-	void info() {
+	void info() 
+	{
 		std::cout << "prism, base area: "<< prism_base->area() << "\nprism, volume: " << volume() << std::endl;
 		std::cout << "prism, surface area: " << surface_area() << std::endl;
 	}
