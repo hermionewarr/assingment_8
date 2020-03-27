@@ -11,16 +11,8 @@ protected:
 public:
 	shape(double shape_dimensions) { dimensions = shape_dimensions;}
 	virtual ~shape() { std::cout << "destroying shape" << std::endl; }
-	virtual double area() 
-	{
-		double shape_area{};
-		return shape_area;
-	}
-	virtual double volume() 
-	{
-		double shape_volume{};
-		return shape_volume;
-	}
+	virtual double area() {return 0;}
+	virtual double volume() {return 0;}
 	virtual void info()
 	{
 		std::cout << "shape, with dimensions: " << dimensions << std::endl;
@@ -228,7 +220,7 @@ public:
 	double surface_area() 
 	{
 		//Knud Thomsen's formula
-		double knud_ellipsoid_sa = 4 * pi * pow((pow(radius_1,p) * pow(radius_2, p) + pow(radius_1, p)* pow(radius_3, p) + pow(radius_2, p)* pow(radius_3, p)) / 3, -p);
+		double knud_ellipsoid_sa = 4 * pi * pow((pow(radius_1,p) * pow(radius_2, p) + pow(radius_1, p)* pow(radius_3, p) + pow(radius_2, p)* pow(radius_3, p)) / 3, 1/p);
 		return knud_ellipsoid_sa;
 	}
 	void info() 
